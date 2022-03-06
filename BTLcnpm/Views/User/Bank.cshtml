@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Bank";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+@model List<Model.EF.UserBank>
+    <script>
+        function nap_tien() {
+            location.assign("/nap-tien");
+        }
+    </script>
+
+<div class="content_top">
+    <div class="heading">
+        <h3>Tài khoản / Thẻ ngân hàng</h3>
+    </div>
+
+    <div class="clear"></div>
+</div>
+<div class="container">
+    <div class="row">
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <div class="list-group col-md-7">
+                    <br />
+                    <a href="~/User/AddUserBank/@item.BankName" class="list-group-item list-group-item-action">@((item.BankName.Contains("ACB")) ? ("ACB - Ngân hàng TMCP Á Châu") : ((item.BankName.Contains("OCB")) ? ("OCB - Ngân hàng TMCP Phương Đông") : ((item.BankName.Contains("VCB")) ? ("VCB - Ngân hàng TMCP Ngoại Thương") : "NO"))) 
+                    <span style="margin-right: 0px; float: right;">[* @item.STK]</span></a>
+                    <div class="col-md-4">
+                        <br />
+                        <button class="btn btn-danger">Xóa</button>
+                        <button onclick="nap_tien()" class="btn btn-danger">Nạp tiền</button>
+                    </div>
+                </div>
+            }
+        }
+
+
+
+    </div>
+</div>

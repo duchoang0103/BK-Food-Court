@@ -1,0 +1,116 @@
+﻿@{
+    ViewBag.Title = "Doanh thu từ món ăn";
+    Layout = "~/Areas/Admin/Views/Shared/Layout.cshtml";
+    var tat_ca_gian_hang = (List<Model.EF.Vendor>)ViewBag.tat_ca_gian_hang;
+    var tat_ca_san_pham = (List<Model.EF.Product>)ViewBag.tat_ca_san_pham;
+    var tat_ca_don_hang = (List<Model.EF.Order>)ViewBag.listOrder;
+    var tat_ca_user = (List<Model.EF.User>)ViewBag.tat_ca_user;
+
+    DateTime ngay1 = (ViewBag.ngay1 == null) ? DateTime.Today : ((DateTime)ViewBag.ngay1);
+    DateTime ngay2 = (ViewBag.ngay2 == null) ? DateTime.Today : ((DateTime)ViewBag.ngay2);
+    var ten_san_pham = "";
+    var ten_gian_hang = ""; 
+    decimal tong_tien_1 = 0;
+}
+
+@section jsFooter{
+    <script>
+        $("#ngay1-ngay2").validate({
+            rules: {
+                ngay1: "required",
+                ngay2: "required",
+            },
+
+            messages: {
+                ngay1: "Làm ơn nhập ngày bắt đầu.",
+                ngay2: "Làm ơn nhập ngày kết thúc.",
+            },
+
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    </script>
+}
+
+<div class="card-header">
+    <i class="fas fa-table mr-1"></i> Danh sách món ăn: 
+</div>
+@foreach (var item in tat_ca_don_hang)
+{
+    tong_tien_1 += item.Price;
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "ngay1-ngay2" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <label id="BeginDate">Từ ngày: </label>
+            <input type="date" id="ngay1" name="ngay1" value="@(ngay1.ToString("yyyy-MM-dd"))" />
+        </div>
+        <div class="form-group">
+            <label id="endDate">Đến ngày:</label>
+            <input type="date" id="ngay2" name="ngay2" value="@(ngay2.ToString("yyyy-MM-dd"))" />
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Tìm kiếm" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Gian hàng</th>
+                    <th>Món ăn</th>
+                    <th>Hình ảnh</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Tổng tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in tat_ca_san_pham)
+                {
+                    int tong_so_luong = 0;
+                    decimal tong_tien = 0;
+                    foreach (var don_hang in tat_ca_don_hang)
+                    {
+                        if (don_hang.ProductID == item.ID)
+                        {
+                            tong_so_luong += don_hang.Quantity;
+                            tong_tien += don_hang.Quantity * don_hang.Price;
+                        }
+                    }
+                    foreach (var itemA in tat_ca_gian_hang)
+                    {
+                        if (itemA.VendorID == item.VendorID)
+                        {
+                            ten_gian_hang = itemA.VendorName;
+                        }
+                    }
+                <tr id="row">
+                    <td>@ten_gian_hang</td>
+                    <td>@item.Name</td>
+                    <td><img src="@item.Image" alt="@item.Image" width="50px" /></td>
+                    <td>@item.Price.ToString("N0")</td>
+                    <td>@tong_so_luong</td>
+                    <td>@(tong_tien.ToString("N0"))</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <span class="btn btn-success">Tổng doanh thu: @tong_tien_1</span>
+
+    </div>
+</div>
+
+
+
+
+

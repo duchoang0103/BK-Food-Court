@@ -1,0 +1,81 @@
+﻿@model List<Model.EF.Cooker>
+@{
+    ViewBag.Title = "Danh sách đầu bếp";
+    Layout = "~/Areas/Admin/Views/Shared/Layout.cshtml";
+    var gian_hang = (Model.EF.Vendor)ViewBag.gian_hang;
+    var tat_ca_gian_hang = (List<Model.EF.Vendor>)ViewBag.tat_ca_gian_hang;
+    var a = "";
+}
+@section header{
+    Danh sách sản phẩm gian hàng @if (gian_hang != null)
+    {<span>  @gian_hang.VendorName </span>}
+}
+
+<div class="card-header"><i class="fas fa-table mr-1"></i>Danh sách đầu bếp</div>
+<br />
+@if (gian_hang != null)
+{
+    using (Html.BeginForm("Index", "Product", FormMethod.Get))
+    {
+        <div class="row form-group">
+            <div class="col-lg-12">
+
+                <div class="col-md-5">
+
+                    <a class="btn btn-success" href="/Admin/Cooker/Create?vendorId=@gian_hang.VendorID">Thêm mới đầu bếp</a>
+
+
+                    <a class="btn btn-success" href="/Admin/Vendor/Index">Danh sách gian hàng</a>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Tên</th>
+                    <th>Tài khoản</th>
+                    <th>Gian hàng</th>
+                    <th>Email</th>
+                    <th>SĐT</th>
+                    <th>Trạng thái</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    foreach (var itemA in tat_ca_gian_hang)
+                    {
+                        if (itemA.VendorID == item.VendorId)
+                        {
+                            a = itemA.VendorName;
+                        }
+                    }
+                    <tr id="row">
+                        <td>@item.Name</td>
+                        <td>@item.UserName</td>
+                        <td>
+                            @a
+                        </td>
+                        <td>@item.Email</td>
+                        <td>@item.Phone</td>
+                        <td><a href="/Admin/Cooker/EditStatus?cookerId=@item.ID" class="btn-active">@Html.Raw(item.Status ? "<strong>Kích hoạt</strong>" : "<strong>Khoá</strong>")</a></td>
+                        <td>
+                            <a href="/Admin/Cooker/Edit?cookerId=@item.ID">Sửa</a>
+                            |
+                            <a href="/Admin/Cooker/Delete?cookerId=@item.ID" onclick="return confirm('Xác nhận xóa món ăn?')">Xóa</a>
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+

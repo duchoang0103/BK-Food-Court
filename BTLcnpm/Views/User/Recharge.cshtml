@@ -1,0 +1,61 @@
+﻿@model BTLcnpm.Common.SoTien
+@{
+    ViewBag.Title = "Recharge";
+    Layout = "~/Views/Shared/Layout.cshtml";
+    var mesg = (ViewBag.mes == null)?"": ViewBag.mes;
+
+}
+@*<script>
+        function nap_tien() {
+            //lấy nội dung value của thẻ có id = hello
+            var content = document.getElementById("inputMoney").value;
+            //in ra thông nội dung lấy được.
+            var href = "/nap-tien?money=" + content;
+            location.assign(href);
+        }
+    </script>*@
+<br />
+<div class="content_top">
+    <div class="heading">
+        <h3>Nạp tiền</h3>
+    </div>
+
+    <div class="clear"></div>
+</div>
+
+@using (Html.BeginForm("Recharge", "User", FormMethod.Post))
+{
+    <span class="alert-danger">@mesg</span>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            <br />
+            <fieldset>
+                <div class="form-group">
+                    <label class="small mb-1" for="inputEmailAddress">Số tiền</label>
+                    @Html.TextBoxFor(model => model.money, new { @class = "form-control", @autofocus = "autofocus", @placeholder = "Nhập số tiền" })
+                </div>
+
+                <!-- Change this to a button or input when using this as a form -->
+                <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
+                    <button type="submit" onclick="return confirm('Xác nhận nạp tiền vào tài khoản?')" class="btn btn-lg btn btn-primary btn-block">Nạp</button>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+}
+@*<form action="">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <br />
+                <label for="inputCity">Số tiền</label>
+                <input type="text" class="form-control" id="inputMoney" placeholder="Nhập số tiền">
+            </div>
+        </div>
+        <button type="submit" onclick="nap_tien()" class="btn btn-primary">Nạp</button>
+    </form>*@
+
+
+

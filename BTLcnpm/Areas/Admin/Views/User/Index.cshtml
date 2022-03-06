@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/Layout.cshtml";
+}
+
+@model List<Model.EF.User>
+@{
+    ViewBag.Title = "Quản lý người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/Layout.cshtml";
+}
+@section header{
+    Danh sách người dùng
+}
+
+@section jsFooter{
+    <script src="/assets/admin/js/controller/userController.js"></script>
+}
+<div class="card-header"><i class="fas fa-table mr-1"></i>Danh sách khách hàng</div>
+<br />
+
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+
+                    <th>Tài khoản</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Trạng thái</th>
+                    <th>Tài khoản</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr id="row_@item.ID">
+
+                        <td>@item.UserName</td>
+                        <td>@item.Name</td>
+                        <td>@item.Email</td>
+                        <td>@item.Balance</td>
+                        <td><a href="/Admin/User/ChangeStatus?userId=@item.ID" class="btn-active" data-id="@item.ID">@Html.Raw(item.Status ? "<strong>Kích hoạt</strong>" : "<strong>Khoá</strong>")</a></td>
+                        <td>
+                            
+                            <a href="/Admin/User/Delete?userId=@item.ID"><strong>Xóa</strong></a>
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+

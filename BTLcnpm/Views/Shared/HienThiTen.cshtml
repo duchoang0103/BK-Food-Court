@@ -1,0 +1,21 @@
+﻿@{
+    var ten = ViewBag.ten_khach_hang;
+    var so_du = ViewBag.so_du;
+    var session = (BTLcnpm.Common.UserLogin)Session[BTLcnpm.Common.CommonConstants.USER_SESSION];
+}
+@if (session == null)
+{
+    <ul>
+        <li><a href="/dang-nhap">Đăng nhập</a></li>
+        <li><a href="#">Đăng ký</a></li>
+    </ul>
+}
+else
+{
+    <ul>
+        <li>Xin chào: <a href="/thong-tin-tai-khoan"> @ten</a></li>
+        <li><a href="#">@so_du $</a></li>
+        <li><a href="~/nap-tien">Nạp tiền</a></li>
+        <li onclick="return confirm('Xác nhận đăng xuất!!')">@Html.ActionLink("Đăng xuất", "Logout", "User")</li>
+    </ul>
+}

@@ -1,0 +1,60 @@
+﻿
+@model List<Model.EF.Product>
+@{
+    ViewBag.Title = "Danh sách món ăn";
+    Layout = "~/Areas/DauBepPage/Views/Shared/Layout.cshtml";
+    var gian_hang = (Model.EF.Vendor)ViewBag.gian_hang;
+    var tat_ca_gian_hang = (List<Model.EF.Vendor>)ViewBag.tat_ca_gian_hang;
+    var a = "";
+}
+@section header{
+    Danh sách món ăn ở gian hàng: @if (gian_hang != null)
+    {<span>  @gian_hang.VendorName </span>}
+}
+
+<div class="card-header"><i class="fas fa-table mr-1"></i> Danh sách món ăn</div>
+
+
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+
+                    <th>Tên</th>
+                    <th>Hình ảnh</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Trạng thái</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    foreach (var itemA in tat_ca_gian_hang)
+                    {
+                        if (itemA.VendorID == item.VendorID)
+                        {
+                            a = itemA.VendorName;
+                        }
+                    }
+                    <tr id="row">
+                        <td>@item.Name</td>
+                        <td><img src="@item.Image" alt="@item.Image" width="70px"/></td>
+                        <td>@item.Price.ToString("N0")</td>
+                        <td>@item.Quantity</td>
+                        
+                        <td><a href="/DauBepPage/TrangDauBep/EditProductStatus?productId=@item.ID" class="btn-active" data-id="@item.VendorID">@Html.Raw(item.Status ? "<strong  class='btn btn-primary'>Kích hoạt</strong>" : "<strong class='btn btn-danger'>Khoá</strong>")</a></td>
+                        <td>
+                            <a href="/DauBepPage/TrangDauBep/Edit?productId=@item.ID"><strong class="btn btn-success">Sửa</strong></a>
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+

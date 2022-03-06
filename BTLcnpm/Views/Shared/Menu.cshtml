@@ -1,0 +1,13 @@
+﻿@model List<Model.EF.Vendor>
+<div class="menu">
+    <ul>
+        <li class="active"><a href="~/Home/index">Trang chủ</a></li>
+        @foreach (var item in Model)
+        {
+            <li><a href="~/san-pham/@item.VendorName-@item.VendorID">@item.VendorName</a></li>
+        }
+        <li><a href="~/gio-hang">Giỏ hàng</a></li>
+        <div class="clear"></div>
+
+    </ul>
+</div>

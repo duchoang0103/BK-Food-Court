@@ -1,0 +1,125 @@
+﻿@{
+    ViewBag.Title = "Doanh thu từ đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/Layout.cshtml";
+    var tat_ca_gian_hang = (List<Model.EF.Vendor>)ViewBag.tat_ca_gian_hang;
+    var tat_ca_san_pham = (List<Model.EF.Product>)ViewBag.tat_ca_san_pham;
+    var Model111 = (List<Model.EF.Order>)ViewBag.listOrder;
+    var tat_ca_user = (List<Model.EF.User>)ViewBag.tat_ca_user;
+
+    DateTime ngay1 = (ViewBag.ngay1 == null) ? DateTime.Today : ((DateTime)ViewBag.ngay1);
+    DateTime ngay2 = (ViewBag.ngay2 == null) ? DateTime.Today : ((DateTime)ViewBag.ngay2);
+    var ten_san_pham = "";
+    var ten_khach_hang = "";
+    var ten_gian_hang = "";
+    decimal tong_tien = 0;
+}
+
+@section jsFooter{
+    <script>
+        $("#ngay1-ngay2").validate({
+            rules: {
+                ngay1: "required",
+                ngay2: "required",
+            },
+
+            messages: {
+                ngay1: "Làm ơn nhập ngày bắt đầu.",
+                ngay2: "Làm ơn nhập ngày kết thúc.",
+            },
+
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    </script>
+}
+
+<div class="card-header">
+    <i class="fas fa-table mr-1"></i> Danh sách đơn hàng:
+</div>
+@foreach (var item in Model111)
+{
+    tong_tien += item.Price;
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "ngay1-ngay2" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <label id="BeginDate">Từ ngày: </label>
+            <input type="date" id="ngay1" name="ngay1" value="@(ngay1.ToString("yyyy-MM-dd"))" />
+        </div>
+        <div class="form-group">
+            <label id="endDate">Đến ngày:</label>
+            <input type="date" id="ngay2" name="ngay2" value="@(ngay2.ToString("yyyy-MM-dd"))" />
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Tìm kiếm" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Mã ĐH</th>
+                    <th>Khách hàng</th>
+                    <th>Món ăn</th>
+                    <th>Gian hàng</th>
+                    <th>Ngày đặt</th>
+                    <th>Số lượng</th>
+                    <th>Tổng tiền</th>
+                    <th>PTTT</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model111)
+                {
+                    foreach (var itemA in tat_ca_san_pham)
+                    {
+                        if (itemA.ID == item.ProductID)
+                        {
+                            ten_san_pham = itemA.Name;
+                        }
+                    }
+                    foreach (var itemA in tat_ca_user)
+                    {
+                        if (itemA.ID == item.UserID)
+                        {
+                            ten_khach_hang = itemA.Name;
+                        }
+                    }
+                    foreach (var itemA in tat_ca_gian_hang)
+                    {
+                        if (itemA.VendorID == item.VendorID)
+                        {
+                            ten_gian_hang = itemA.VendorName;
+                        }
+                    }
+                <tr id="row">
+                    <td>@item.OrderID</td>
+                    <td>@ten_khach_hang</td>
+                    <td>@ten_san_pham</td>
+                    <td>@ten_gian_hang</td>
+                    <td>@item.CreatedDate.ToString("dd-MM-yyyy")</td>
+                    <td>@item.Quantity</td>
+                    <td>@((item.Price*item.Quantity).ToString("N0"))</td>
+                    <td><a href="#">@Html.Raw((item.PaymentMethod == 0) ? "<strong class='btn btn-primary'>Tiền mặt</strong>" : "<strong class='btn btn-success'>Online</strong>")</a></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <span class="btn btn-success">Tổng doanh thu: @tong_tien</span>
+
+    </div>
+</div>
+
+
+
+
+

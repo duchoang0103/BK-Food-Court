@@ -1,0 +1,222 @@
+﻿@model List<BTLcnpm.Models.CartItem>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Layout.cshtml";
+    var KhongDuTien = (ViewBag.KhongDuTien == null)? 0 : 1 ;
+}
+
+@section jsFooter{
+    <script>
+        $(document).on("click", "#btnPayment", function () {
+            $.confirm({
+                title: 'Xác nhận thanh toán',
+                content: 'Chọn phương thức thanh toán',
+                type: 'green',
+                typeAnimated: true,
+                buttons: {
+                    vi: {
+                        text: 'Thanh toán qua ví SFC',
+                        btnClass: 'btn-green',
+                        action: function () {
+
+                            var sodu = @KhongDuTien;
+                            if (sodu == 1) {
+                                alert("Số dư không đủ để giao dịch");
+                            }
+                            else {
+                                if (confirm("Xác nhận thanh toán?")) {
+                                    location.assign("/Cart/ThanhToanSFC");
+                                }
+                            }
+                        }
+                    },
+                    tien: {
+                        text: 'Thanh toán bằng tiền mặt',
+                        btnClass: 'btn-green',
+                        action: function () {
+                            if (confirm("Xác nhận thanh toán?")) {
+                                location.assign("/Cart/ThanhToanTienMat");
+                            }
+                        }
+                    },
+                    close: {
+                        text: 'Quay lại',
+                        function() {
+                        }
+                    }
+                }
+            });
+        });
+
+    </script>
+}
+<style>
+    .value-button {
+        display: inline-block;
+        border: 1px solid #ddd;
+        margin: 0px;
+        width: 40px;
+        /*height: 20px;*/
+        text-align: center;
+        vertical-align: middle;
+        padding: 11px 0;
+        background: #eee;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+        .value-button:hover {
+            cursor: pointer;
+        }
+
+    .decrease {
+        margin-right: -4px;
+        border-radius: 8px 0 0 8px;
+    }
+
+    .increase {
+        margin-left: -4px;
+        border-radius: 0 8px 8px 0;
+    }
+
+    #input-wrap {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    #txtQuantity {
+        text-align: center;
+        border: none;
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        margin: 0px;
+        width: 40px;
+        height: 43px;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .CapNhat {
+        display: none;
+    }
+</style>
+<script>
+
+    function gui() {
+        //lấy nội dung value của thẻ có id = hello
+        var content = document.getElementById("txtQuantity").value;
+        //in ra thông nội dung lấy được.
+        var hre = document.getElementById("CapNhat");
+        hre.href += content;
+    }
+    function dieu_huong_home() {
+        location.assign("/HOme/index");
+    }
+    function dieu_huong_xoa_tat_ca() {
+        var res = confirm("Xóa tất cả giỏ hàng?");
+        if (res)
+            location.assign("/xoa-gio-hang");
+    }
+</script>
+<div class="content">
+    <div class="section group">
+        <div>
+            @if (KhongDuTien == 0)
+            {
+                <span class="btn-danger">@ViewBag.KhongDuTien</span>
+            }
+        </div>
+        @if (Model != null)
+        {
+            if (Model.Count > 0)
+            {
+
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td>Mã SP</td>
+                            <td>Tên SP</td>
+                            <td>Ảnh SP</td>
+                            <td>Số lượng</td>
+                            <td>Đơn giá</td>
+                            <td>Thành tiền</td>
+                            <td>#</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Product.ID</td>
+                                <td>@item.Product.Name</td>
+                                <td><img src="@item.Product.Image" height="50" /></td>
+                                @*<td><input type="text" class="txtQuantity" id="txtQuantity" value="" /></td>*@
+                                <td>
+                                    <div class="value-button decrease" value="Decrease Value">-</div>
+                                    <input type="number" id="txtQuantity" value="@item.Quantity" disabled />
+                                    <div class="value-button increase" value="Increase Value">+</div>
+                                    <a href="/cap-nhat-sp-gio-hang?productId=@item.Product.ID&quantity=" data-id="@item.Product.ID" class="CapNhat btn btn-primary">Cập nhật</a>
+                                </td>
+                                <td>@item.Product.Price.ToString("N0")</td>
+                                <td>@((item.Product.Price * item.Quantity).ToString("N0"))</td>
+                                <td><a href="/xoa-sp-gio-hang?productId=@item.Product.ID" onclick="return confirm('Bạn có muốn xóa?')" class="btn btn-primary">Xoá</a></td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+                <button id="btnContinue" onclick="dieu_huong_home()" class="btn btn-info">Tiếp tục mua hàng</button>
+                <button id="btnDeleteAll" onclick="dieu_huong_xoa_tat_ca()" class="btn btn-info">Xoá giỏ hàng</button>
+                <button id="btnPayment" class="btn btn-info">Thanh toán</button>
+
+            }
+            else
+            {
+                <span class="alert alert-danger">Chưa có sản phẩm nào trong giỏ hàng</span>
+            }
+        }
+        else
+        {
+            <span class="alert alert-danger">Chưa có sản phẩm nào trong giỏ hàng</span>
+        }
+
+    </div>
+</div>
+<script>
+    $(".increase").on("click", function () {
+        var $button = $(this);
+        var value = $button.parent().find("input").val();
+        value = isNaN(value) ? 0 : value;
+        value++;
+        $button.parent().find("input").val(value);
+        var hre = $button.parent().find("a").attr("href") + value;
+        location.assign(hre);
+
+    });
+    $(".decrease").on("click", function () {
+        var $button = $(this);
+        var value = $button.parent().find("input").val();
+        value = isNaN(value) ? 0 : value;
+        value--;
+        value = (value < 0) ? 0 : value;
+        var hre = $button.parent().find("a").attr("href") + value;
+        location.assign(hre);
+    });
+    $(".CapNhat").on("click", function () {
+        var $button = $(this);
+        var value = $button.parent().find("input").val();
+        var hre = $button.attr("href") + value;
+        $button.attr('href', hre);
+    });
+
+</script>

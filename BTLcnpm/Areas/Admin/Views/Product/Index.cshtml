@@ -1,0 +1,81 @@
+﻿@model List<Model.EF.Product>
+@{
+    ViewBag.Title = "Quản lý sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/Layout.cshtml";
+    var gian_hang = (Model.EF.Vendor)ViewBag.gian_hang;
+    var tat_ca_gian_hang = (List<Model.EF.Vendor>)ViewBag.tat_ca_gian_hang;
+    var a = "";
+}
+@section header{
+    Danh sách món ăn ở gian hàng: @if (gian_hang != null)
+    {<span>  @gian_hang.VendorName </span>}
+}
+
+<div class="card-header"><i class="fas fa-table mr-1"></i> Danh sách món ăn</div>
+<br />
+@if (gian_hang != null)
+{
+    using (Html.BeginForm("Index", "Product", FormMethod.Get, new { id = "danh_sach_san_pham" }))
+    {
+        <div class="row form-group">
+            <div class="col-lg-12">
+
+                <div class="col-md-5">
+
+                    <a class="btn btn-success" href="/Admin/Product/Create?vendorId=@gian_hang.VendorID">Thêm mới món ăn</a>
+                    <a class="btn btn-success" href="/Admin/Vendor/Index">Danh sách gian hàng</a>
+                </div>
+            </div>
+        </div>
+    }
+}
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+
+                    <th>Tên</th>
+                    <th>Hình ảnh</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Gian hàng</th>
+                    <th>Thứ tự hiển thị</th>
+                    <th>Trạng thái</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    foreach (var itemA in tat_ca_gian_hang)
+                    {
+                        if (itemA.VendorID == item.VendorID)
+                        {
+                            a = itemA.VendorName;
+                        }
+                    }
+                    <tr id="row">
+                        <td>@item.Name</td>
+                        <td><img src="@item.Image" alt="@item.Image" width="50px" /></td>
+                        <td>@item.Price</td>
+                        <td>@item.Quantity</td>
+                        <td>
+                            @a
+                        </td>
+                        <td>@item.DisplayOrder</td>
+                        <td><a href="/Admin/Product/EditStatus?productId=@item.ID" class="btn-active" data-id="@item.VendorID">@Html.Raw(item.Status ? "<strong>Kích hoạt</strong>" : "<strong>Khoá</strong>")</a></td>
+                        <td>
+                            <a href="/Admin/Product/Edit?productId=@item.ID">Sửa</a>
+                            |
+                            <a href="/Admin/Product/Delete?productId=@item.ID" onclick="return confirm('Xác nhận xóa món ăn?')">Xóa</a>
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+

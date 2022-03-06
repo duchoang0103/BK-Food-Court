@@ -1,0 +1,69 @@
+﻿@model List<Model.EF.Order>
+@{
+    ViewBag.Title = "Danh sách đơn hàng";
+    Layout = "~/Areas/DauBepPage/Views/Shared/Layout.cshtml";
+    var tat_ca_gian_hang = (List<Model.EF.Vendor>)ViewBag.tat_ca_gian_hang;
+    var tat_ca_san_pham = (List<Model.EF.Product>)ViewBag.tat_ca_san_pham;
+    var gian_hang = (Model.EF.Vendor)ViewBag.gian_hang;
+    var tat_ca_user = (List<Model.EF.User>)ViewBag.tat_ca_user;
+    var ten_san_pham = "";
+    var ten_khach_hang = "";
+}
+
+<div class="card-header">
+    <i class="fas fa-table mr-1"></i> Danh sách món ăn - đơn hàng: @if (gian_hang != null)
+    {<span>  @gian_hang.VendorName </span>}
+</div>
+
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Mã ĐH</th>
+                    <th>Khách hàng</th>
+                    <th>Món ăn</th>
+                    <th>Số lượng</th>
+                    <th>Tổng tiền</th>
+                    <th>PTTT</th>
+                    <th>TTTT</th>
+                    <th>TT Món ăn</th>
+                    <th>Hoàn tất</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    foreach (var itemA in tat_ca_san_pham)
+                    {
+                        if (itemA.ID == item.ProductID)
+                        {
+                            ten_san_pham = itemA.Name;
+                        }
+                    }
+                    foreach (var itemA in tat_ca_user)
+                    {
+                        if (itemA.ID == item.UserID)
+                        {
+                            ten_khach_hang = itemA.Name;
+                        }
+                    }
+                <tr id="row">
+                    <td>@item.OrderID</td>
+                    <td>@ten_khach_hang</td>
+                    <td>@ten_san_pham</td>
+                    <td>@item.Quantity</td>
+                    <td>@((item.Price*item.Quantity).ToString("N0"))</td>
+                    <td><a href="#">@Html.Raw((item.PaymentMethod == 0) ? "<strong class='btn btn-primary'>Tiền mặt</strong>" : "<strong class='btn btn-success'>Online</strong>")</a></td>
+                    <td><a href="/DauBepPage/TrangDauBep/EditPaymentStatus?OrderID=@item.OrderID">@Html.Raw((item.PaymentStatus == 0) ? "<strong class='btn btn-primary'>Chưa TT</strong>" : "<strong class='btn btn-success'>Đã thanh toán</strong>")</a></td>
+                    <td><a href="/DauBepPage/TrangDauBep/EditFoodStatus?OrderID=@item.OrderID">@Html.Raw((item.FoodStatus == 0) ? "<strong class='btn btn-primary'> Đang chuẩn bị</strong>" : "<strong class='btn btn-success'>Đã xong</strong>")</a></td>
+                    <td><a href="/DauBepPage/TrangDauBep/EditStatus?OrderID=@item.OrderID">@Html.Raw((item.Status == false) ? "<strong class='btn btn-primary'> Ấn => Hoàn tất </strong>" : "<strong class='btn btn-success'>Đã hoàn tất</strong>")</a></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+

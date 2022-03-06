@@ -1,0 +1,79 @@
+﻿@model List<BTLcnpm.Models.CartItem>
+@{
+    ViewBag.Title = "ThanhToanSFC";
+    Layout = "~/Views/Shared/Layout.cshtml";
+    var tat_ca_gian_hang = (List<Model.EF.Vendor>)ViewBag.tat_ca_gian_hang;
+    var message = ViewBag.message;
+    var message2 = ViewBag.message2;
+}
+
+<div class="content">
+    <div class="section group">
+        @if (Model != null)
+        {
+            if (Model.Count > 0)
+            {
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <span class="btn btn-success">Đặt hàng thành công</span> <br /><br />
+                            <p><span class="btn btn-info">Thông tin đơn hàng</span></p>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td>Mã SP</td>
+                                        <td>Tên SP</td>
+                                        <td>Quầy hàng</td>
+                                        <td>Số lượng x Đơn giá</td>
+                                        <td>Thành tiền</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Product.ID</td>
+                                            <td>@item.Product.Name</td>
+
+                                            @foreach (var item1 in tat_ca_gian_hang)
+                                            {
+                                                if (item1.VendorID == item.Product.VendorID)
+                                                {
+                                                    <td>@item1.VendorName</td>
+                                                    break;
+                                                }
+
+                                            }
+
+                                            <td>@item.Quantity.ToString("N0") x @item.Product.Price.ToString("N0")</td>
+                                            <td>@((item.Product.Price * item.Quantity).ToString("N0"))</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                            <div>
+                                <span class="btn btn-success">@message</span>
+                            </div>
+                            <div>
+                                <span class="btn btn-success">@message2</span>
+                            </div>
+                            <br />
+
+                            <button class="alert alert-danger">In đơn hàng</button>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <span class="alert alert-danger">Chưa có sản phẩm nào trong giỏ hàng</span>
+            }
+        }
+        else
+        {
+            <span class="alert alert-danger">Chưa có sản phẩm nào trong giỏ hàng</span>
+        }
+    </div>
+</div>
+

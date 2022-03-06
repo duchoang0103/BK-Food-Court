@@ -1,0 +1,37 @@
+﻿@model List<Model.EF.Product>
+    @{
+        ViewBag.Title = "Index";
+        Layout = "~/Views/Shared/Layout.cshtml";
+
+    }
+
+    <div class="main">
+        <div class="content">
+            @*<div class="content_top">
+                    <div class="heading">
+                        <h3>Thức uống</h3>
+                    </div>
+
+                    <div class="clear"></div>
+                </div>*@
+            <div class="section group">
+                @foreach (var item in Model)
+                {
+                    <div class="grid_1_of_4 images_1_of_4">
+                        <img src="@item.Image" alt="" />
+                        <h2>@item.Name </h2>
+                        <div class="price-details">
+                            <div class="price-number">
+                                <p><span class="rupees">@(item.Price)</span></p>
+                            </div>
+                            <div class="add-cart">
+                                <h4><a href="/them-gio-hang?productId=@item.ID">Thêm giỏ hàng</a></h4>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+

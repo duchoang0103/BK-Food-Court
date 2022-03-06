@@ -1,0 +1,146 @@
+﻿@model Model.EF.Vendor
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/Layout.cshtml";
+}
+@section jsFooter{
+
+    <script>
+        $("#tao_moi_gian_hang").validate({
+            rules: {
+                VendorName: "required",
+                Phone: "required",
+                Email: {
+                    required: true,
+                    email: true
+                },
+                DisplayOrder: "required",
+            },
+
+            messages: {
+                VendorName: "Làm ơn nhập tên.",
+                Phone: "Làm ơn nhập số điện thoại.",
+                Email: {
+                    required: "Làm ơn nhập Email.",
+                    email: "Email không hợp lệ."
+                },
+                DisplayOrder: "Làm ơn thứ tự hiển thị.",
+            },
+
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    </script>
+}
+<div class="card-header"><i class="fas fa-table mr-1"></i>Tạo mới gian hàng</div>
+<br />
+<div class="row">
+
+    <div class="col-lg-12">
+
+        <div class="panel panel-default">
+            
+
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="row form-group">
+                    <div class="col-lg-12">
+                        <div class="col-md-5">
+                            <a class="btn btn-success" href="/Admin/Vendor/Index">Danh sách gian hàng</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6" style="text-align:left">
+
+                        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "tao_moi_gian_hang" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="form-group">
+                                    <div>
+                                        <span style="padding-left:10px;">Tên gian hàng</span>
+                                    </div>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.VendorName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.VendorName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <span style="padding-left:10px;">Tài khoản</span>
+                                    </div>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.VendorAccount, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.VendorAccount, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <span style="padding-left:10px;">Mật khẩu</span>
+                                    </div>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.VendorPassword, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.VendorPassword, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <span style="padding-left:10px;">Email liên hệ</span>
+                                    </div>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <span style="padding-left:10px;">Số điện thoại liên hệ</span>
+                                    </div>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <span style="padding-left:10px;">Thứ tự hiển thị</span>
+                                    </div>
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.DisplayOrder, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.DisplayOrder, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <span style="padding-left:10px;padding-right:10px;">Trạng thái </span>
+                                        @Html.DropDownListFor(model => model.Status, new List<SelectListItem>
+                                        {
+                                         new SelectListItem {Text = "Khóa", Value = "false"},
+                                         new SelectListItem {Selected = true, Text = "Kích hoạt", Value = "true"},
+                                        }, "--- Select ---", new { style = "width:250px ; margin-left:12px;height:30px" })
+                                        @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <input type="submit" value="Tạo mới gian hàng" class="btn btn-primary" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+
+                        
+
+                        <!-- /.panel-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
